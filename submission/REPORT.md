@@ -8,7 +8,7 @@
 - **MSSV:**2A202602587
 - **Lớp:** K4-L3B
 - **Repository URL:**https://github.com/HnivGnad/K4-L3-DAY13-DangTheVinh-2A202602587-Monitoring-LLMOps.git
-- **Commit SHA cuối:**
+- **Commit SHA cuối:**97f4848225bbdcdd1feee2568446d7a81d400fe9
 - **Challenge ID:** `day13-k4-l3b-monitoring-llmops-v1`
 - **Tên project Langfuse cá nhân:** `day13-k4-l3b-2A202602587`
 
