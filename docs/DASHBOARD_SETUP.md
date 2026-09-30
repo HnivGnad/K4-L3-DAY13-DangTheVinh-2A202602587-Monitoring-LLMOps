@@ -31,6 +31,15 @@ Giữ time range mặc định 60 phút, refresh 30 giây và hiển thị thres
 python scripts/validate_dashboard.py
 ```
 
+Repo có sẵn generator không cần thêm dependency ngoài `requirements.txt`:
+
+```powershell
+python scripts/generate_dashboard.py
+```
+
+Lệnh tạo dashboard runtime tại `submission/evidence/11-dashboard-overview.html`.
+Mở file trong trình duyệt và chụp thành `11-dashboard-overview.png` để lưu evidence.
+
 Validator kiểm tra cấu trúc contract; nó không thể chứng minh biểu đồ trong ảnh dùng đúng dữ liệu. Evidence runtime vẫn bắt buộc.
 
 ## Cách kiểm tra runtime

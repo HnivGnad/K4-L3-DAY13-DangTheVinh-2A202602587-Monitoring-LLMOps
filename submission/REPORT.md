@@ -37,13 +37,13 @@
 
 | Nội dung | Baseline | Kết quả cuối | Nhận xét |
 |---|---|---|---|
-| `validate_logs.py` | | | |
-| `validate_dashboard.py` | | | |
-| `pytest` | | | |
-| Số traces hợp lệ | | | |
-| Số PII leak | | | |
-| Latency P95 / TTFT P95 | | | |
-| Retrieval success rate | | | |
+| `validate_logs.py` | Chưa ghi nhận | 100/100 | 10 correlation ID, đủ enrichment |
+| `validate_dashboard.py` | Chưa ghi nhận | 6/6 panel | Contract hợp lệ |
+| `pytest` | Chưa ghi nhận | 29 passed | Có warning do `.pytest_cache` bị giới hạn quyền ghi |
+| Số traces hợp lệ | 0 | 20 generation spans | 11 dùng prompt v1, 9 dùng prompt v2 |
+| Số PII leak | Chưa ghi nhận | 0 | Kiểm tra trên workload mẫu |
+| Latency P95 / TTFT P95 | Chưa ghi nhận | khoảng 154ms / 50ms | Workload fake LLM bình thường |
+| Retrieval success rate | Chưa ghi nhận | 100% | Workload không bật incident |
 
 ## 4. Logging và PII
 
@@ -54,21 +54,21 @@
 
 ## 5. Tracing và prompt versioning
 
-- **Cách xác nhận traces do chính tôi tạo trong project cá nhân:**
-- **Cấu trúc root/retrieval/generation observations:**
-- **Cách nối trace với log:**
-- **Prompt name:**
-- **Version/label baseline:**
-- **Version/label candidate:**
-- **Trace ID của mỗi version:**
-- **Cách promote và rollback `production`:**
+- **Cách xác nhận traces do chính tôi tạo trong project cá nhân:** chạy `scripts/generate_traces.py` bằng key trong `.env`, sau đó truy vấn Observations API v2 trong đúng project và đối chiếu correlation ID.
+- **Cấu trúc root/retrieval/generation observations:** `lab-agent-run` là root agent; `retrieval` là child loại retriever; `generation` là child loại generation có model, TTFT, usage và cost.
+- **Cách nối trace với log:** dùng cùng metadata `correlation_id`; input/output trên trace chỉ lưu preview đã scrub.
+- **Prompt name:** `day13-chat`.
+- **Version/label baseline:** version 1, labels `baseline` và `production` sau rollback.
+- **Version/label candidate:** version 2, label `candidate`.
+- **Trace ID của mỗi version:** v1 `5b458b04c078a6f475230148900d48ba` (`req-726c3055`); v2 `d3801d02e6d1ca9998abd4c4a7bda062` (`req-7f2ccfb2`).
+- **Cách promote và rollback `production`:** `python scripts/manage_prompts.py promote` chuyển `production` sang v2; `python scripts/manage_prompts.py rollback` đưa `production` về v1. Trạng thái cuối là `production -> day13-chat v1`.
 
 ## 6. Dashboard, SLO và alerts
 
-- **Dashboard và sáu panel:**
-- **SLO và lý do chọn:**
-- **Cách tính error budget:**
-- **Ba alert và runbook tương ứng:**
+- **Dashboard và sáu panel:** latency P50/P95/P99 + TTFT P95, traffic, errors + retrieval success, cost, tokens và quality; time range 60 phút, refresh 30 giây và mỗi panel có threshold.
+- **SLO và lý do chọn:** 99.5% request phải có `response_sent` với latency không quá 3000ms trong 28 ngày. Baseline fake workload khoảng 154ms nên ngưỡng này có dư địa tải nhưng vẫn giới hạn thời gian chờ người dùng.
+- **Cách tính error budget:** `100% - 99.5% = 0.5%`; với 10,000 request, tối đa 50 request được phép lỗi hoặc chậm hơn 3000ms.
+- **Ba alert và runbook tương ứng:** `HighLatencyP95` (>3000ms/5m), `HighRequestErrorRate` (>2%/5m), `LowRetrievalSuccessRate` (<90%/10m); đều gửi Slack `#k4-l3b-alerts` và có runbook tại `docs/alerts.md`.
 
 > Ví dụ cách viết error budget: "SLO 99.5% trong 28 ngày nghĩa là error budget 0.5%. Nếu workload có 10,000 request thì tối đa 50 request được phép lỗi hoặc chậm hơn ngưỡng SLO."
 
