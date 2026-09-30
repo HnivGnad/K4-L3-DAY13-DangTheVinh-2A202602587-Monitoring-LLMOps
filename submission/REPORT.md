@@ -4,13 +4,13 @@
 
 ## 1. Thông tin học viên
 
-- **Họ và tên:**
-- **MSSV:**
+- **Họ và tên:**Đặng Thế Vinh
+- **MSSV:**2A202602587
 - **Lớp:** K4-L3B
-- **Repository URL:**
+- **Repository URL:**https://github.com/HnivGnad/K4-L3-DAY13-DangTheVinh-2A202602587-Monitoring-LLMOps.git
 - **Commit SHA cuối:**
-- **Challenge ID:**
-- **Tên project Langfuse cá nhân:** `day13-k4-l3b-<MSSV>`
+- **Challenge ID:** `day13-k4-l3b-monitoring-llmops-v1`
+- **Tên project Langfuse cá nhân:** `day13-k4-l3b-2A202602587`
 
 ## 2. Evidence index
 
@@ -74,14 +74,14 @@
 
 ## 7. Điều tra challenge
 
-- **Challenge ID:**
-- **Khoảng thời gian điều tra:**
-- **Triệu chứng từ metrics:**
-- **Log line và correlation ID liên quan:**
-- **Trace ID và span gây ảnh hưởng:**
-- **Root cause:**
-- **Fix action:**
-- **Preventive measure:**
+- **Challenge ID:** `day13-k4-l3b-monitoring-llmops-v1`.
+- **Khoảng thời gian điều tra:** `2026-09-30 04:14:38–04:14:54 UTC` (`11:14:38–11:14:54` giờ Asia/Bangkok). Evidence metric: [`evidence/12-incident-metric.png`](evidence/12-incident-metric.png).
+- **Triệu chứng từ metrics:** 5 request challenge đều chậm; latency P50 `2654ms`, P95/P99 `3692ms`, vượt ngưỡng challenge `2000ms`. TTFT P95 vẫn `50ms`, error rate `0%` và retrieval success `100%`, nên đây là latency regression trước bước generation chứ không phải lỗi model/tool.
+- **Log line và correlation ID liên quan:** dòng `response_sent` lúc `2026-09-30T04:14:45.447328Z` có `correlation_id=req-bff1e9b0`, `latency_ms=2654`, `ttft_ms=50`, `tool_name=retrieval`, `tool_success=true`. Evidence log: [`evidence/13-incident-log.png`](evidence/13-incident-log.png).
+- **Trace ID và span gây ảnh hưởng:** trace `b3deafba39cb46dc68078b6e5fab2252` có cùng `correlation_id=req-bff1e9b0`; root `lab-agent-run` mất `2658ms`, child `retrieval` mất `2505ms`, còn `generation` chỉ `151ms` với TTFT `50ms`. Evidence trace: [`evidence/14-incident-trace.png`](evidence/14-incident-trace.png).
+- **Root cause:** incident `rag_slow` đưa độ trễ chặn `2.5s` vào `app/mock_rag.py::retrieve`. Metric khoanh vùng latency, log chọn đúng request, và trace xác nhận retrieval chiếm khoảng 94% thời gian root; prompt `day13-chat v1` và generation không phải nguồn regression.
+- **Fix action:** gọi `POST /incidents/rag_slow/disable` để bỏ delay được inject và xác nhận `/health` trả `rag_slow=false`. Trong môi trường thật, cần rollback thay đổi retrieval hoặc chuyển traffic sang backend khỏe trước khi điều tra sâu hơn.
+- **Preventive measure:** duy trì alert `HighLatencyP95`, runbook Metrics → Logs → Traces, đồng thời thêm guardrail riêng cho retrieval latency (ví dụ P95 ≤ `1000ms`), timeout/circuit breaker và test regression để phát hiện dependency chậm trước khi phát hành.
 
 > Gợi ý cách viết ngắn, không thay cho evidence thực tế: "Metric cho thấy `[latency/error/cost/quality]` bất thường trong `[khoảng thời gian]`. Log line `[event]` có `correlation_id=[...]` đại diện cho request bị ảnh hưởng. Trace cùng `correlation_id` cho thấy span `[retrieval/generation/prompt/tool]` có dấu hiệu `[chậm/lỗi/token tăng]`. Root cause là `[nguyên nhân suy ra từ evidence]`. Fix action là `[hành động khôi phục]`; preventive measure là `[alert/runbook/test/guardrail để ngăn tái diễn]`."
 
