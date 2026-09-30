@@ -1,0 +1,2 @@
+{"ts": "2026-09-30T03:00:00Z", "event": "request_received", "correlation_id": "req-12345678"}
+{"ts": "2026-09-30T03:00:01Z", "event": "response_sent", "correlation_id": "req-12345678", "latency_ms": 150, "ttft_ms": 50, "tokens_in": 20, "tokens_out": 80, "cost_usd": 0.00126, "quality_score": 0.9, "tool_success": true}
