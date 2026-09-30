@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trace metadata — prompt, usage, and cost</title>
+  <style>
+    :root { color-scheme:dark; --bg:#07111f; --card:#111f31; --line:#2a4058; --muted:#91a5bc; --text:#f5f8fc; --blue:#5db7ff; --green:#48d6a8; --amber:#ffc857; --red:#ff6b7a; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:radial-gradient(circle at top right,#173454 0,#07111f 42%); color:var(--text); font-family:Inter,Segoe UI,sans-serif; }
+    main { max-width:1320px; margin:auto; padding:42px; }
+    .eyebrow { color:var(--blue); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { margin:10px 0 8px; font-size:34px; }
+    .subtitle { color:var(--muted); margin:0 0 28px; }
+    .card { background:rgba(17,31,49,.96); border:1px solid var(--line); border-radius:16px; padding:24px; box-shadow:0 18px 45px rgba(0,0,0,.2); }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+    .metric { padding:18px; border-radius:12px; background:#0b1828; border:1px solid #243a52; }
+    .metric strong { display:block; font-size:30px; font-variant-numeric:tabular-nums; }
+    .metric span,.muted { color:var(--muted); font-size:13px; }
+    .danger { color:var(--red); } .ok { color:var(--green); } .warn { color:var(--amber); }
+    table { width:100%; margin-top:22px; border-collapse:collapse; font-size:14px; }
+    th,td { padding:12px 10px; border-bottom:1px solid var(--line); text-align:left; }
+    th { color:var(--muted); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    code { font-family:Cascadia Code,Consolas,monospace; color:#d8ecff; }
+    .kv { display:grid; grid-template-columns:220px 1fr; gap:0; margin-top:12px; }
+    .kv div { padding:12px; border-bottom:1px solid var(--line); }
+    .kv .key { color:var(--muted); }
+    .trace-row { display:grid; grid-template-columns:190px 1fr 100px; gap:14px; align-items:center; margin:16px 0; }
+    .trace-label { font-weight:650; }
+    .trace-label small { display:block; color:var(--muted); font-weight:400; margin-top:4px; }
+    .track { position:relative; height:36px; border-radius:8px; background:#081321; overflow:hidden; }
+    .bar { height:100%; min-width:5px; border-radius:8px; background:linear-gradient(90deg,var(--blue),#7d8cff); }
+    .retrieval { background:linear-gradient(90deg,var(--red),var(--amber)); }
+    .generation { background:linear-gradient(90deg,var(--green),var(--blue)); }
+    .duration { text-align:right; font-variant-numeric:tabular-nums; }
+    .callout { margin-top:22px; padding:16px 18px; border-left:4px solid var(--red); background:#171d2a; color:#dfe9f4; }
+    footer { margin-top:20px; color:var(--muted); font-size:12px; }
+  </style>
+</head>
+<body><main><div class="eyebrow">Project · day13-k4-l3b-2A202602587</div><h1>Trace metadata — prompt, usage, and cost</h1><p class="subtitle">Sanitized generation metadata for a trace created by this project.</p>
+<section class="card"><div class="kv"><div class="key">trace_id</div><div><code>5b458b04c078a6f475230148900d48ba</code></div><div class="key">correlation_id</div><div><code>req-726c3055</code></div><div class="key">model</div><div><code>claude-sonnet-4-5</code></div><div class="key">prompt_name</div><div><code>day13-chat</code></div><div class="key">prompt_label</div><div><code>production</code></div><div class="key">prompt_version</div><div><code>1</code></div><div class="key">tokens_input</div><div><code>36</code></div><div class="key">tokens_output</div><div><code>174</code></div><div class="key">tokens_total</div><div><code>210</code></div><div class="key">cost_usd</div><div><code>0.002718</code></div><div class="key">ttft_ms</div><div><code>50</code></div></div>
+<div class="callout" style="border-color:var(--green)"><strong>Privacy:</strong> raw user input and model output were not requested from Langfuse.</div>
+<footer>Source: Langfuse Observations API v2</footer></section></main></body>
+</html>
