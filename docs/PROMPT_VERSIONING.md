@@ -44,6 +44,21 @@ Tên menu/nút trên Langfuse có thể thay đổi nhẹ theo phiên bản, nh�
 5. Chuyển label `production` sang version 2, chạy lại một request.
 6. Rollback `production` về version 1 và lưu ảnh evidence.
 
+Có thể dùng các helper trong repo để thực hiện cùng quy trình bằng SDK:
+
+```powershell
+python scripts/manage_prompts.py setup
+python scripts/generate_traces.py --label baseline --count 10
+python scripts/generate_traces.py --label candidate --count 10
+python scripts/manage_prompts.py promote
+python scripts/generate_traces.py --label production --count 1
+python scripts/manage_prompts.py rollback
+python scripts/manage_prompts.py status
+```
+
+Các script tự đọc `.env`. `setup` chỉ tạo label/version còn thiếu; `promote` chuyển
+`production` sang candidate và `rollback` đưa `production` về baseline.
+
 Không chấm prompt nào “hay hơn”. Điểm nằm ở khả năng truy xuất version, đổi label và rollback có bằng chứng.
 
 ## Evidence
